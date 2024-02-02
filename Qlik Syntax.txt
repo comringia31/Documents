@@ -1,0 +1,108 @@
+
+
+Color Condition on Qlik
+if($(MTD_P)>=5,'#008000',if($(MTD_P)>=(-5) ,'#eb9700','#e60000'))
+
+
+MTD
+((SUm({<[%KeyDate]={">=$(=min([%KeyDate])) <=$(=max([%KeyDate])) "}>}KPI_value)-sum({<MonthYear ,[%KeyDate] ={">=$(=MonthStart(addmonths(max([%KeyDate]),-1) )) 
+<=$(=addmonths(max([%KeyDate]),-1))"}>}KPI_value))/sum({<MonthYear ,[%KeyDate] ={">=$(=MonthStart(addmonths(max([%KeyDate]),-1) )) 
+<=$(=addmonths(max([%KeyDate]),-1))"}>}KPI_value))
+
+
+SDLW
+(Sum({<Day ={ "$(=max(Day))"}>}KPI_value)/Sum({< Day ={ "$(=max(Day-7))"}>}KPI_value))-1
+
+
+SDLM
+((Sum({<[%KeyDate] ={'$(=addmonths(max([%KeyDate]),0))'}>}KPI_value)/ Sum({<MonthYear,[%KeyDate] ={'$(=addmonths(max([%KeyDate]),-1))'}>}KPI_value) )-1)
+
+
+
+--- MTD 
+Sum({<Date={">=$(=(MonthStart(max(Date)))) <=$(=(MAX(Date)))"}>}VALUE) 
+
+
+--PMTD
+Sum({<Date={">=$(=(MonthStart(max(Date),-1))) <=$(=AddMonths(MAX(Date),-1))"}>}VALUE) 
+  
+----Current MTD
+=Sum({<Date={">=$(=(AddYears(MonthStart(max(Date))))) <=$(=(AddYears(MAX(Date))))"}>}VALUE)   
+
+
+----LYMTD
+=Sum({<Date={">=$(=(AddYears(MonthStart(max(Date)),-1))) <=$(=(AddYears(MAX(Date),-1)))"}>}VALUE)   
+
+
+---full years(YTD)
+=Sum({<Date={">=$(=(YearStart(max(Date)))) <=$(=((MAX(Date))))"}>}VALUE) 
+
+ 
+-------current quarter 
+ =Sum({<Date={">=$(=(QuarterStart(max(Date)))) <=$(=((MAX(Date))))"}>}VALUE)  
+
+
+----------Previous Quarter
+=Sum({<Date={">=$(=(QuarterStart(max(Date),-1))) <=$(=(Quarterend(MAX(Date),-1)))"}>}VALUE) 
+
+
+YTD (Year-To-Date) Sales:
+Sum({$<MonthID = {“<=$(=Max(MonthID))”},
+Year = {$(=Max(Year))},
+Quarter = ,
+Month = >} Sales)
+
+QTD  (Quarter-To-Date) Sales:
+Sum({$<MonthID = {“<=$(=Max(MonthID))”},
+QuarterID = {$(=Max(QuarterID))},
+Year = ,
+Quarter = ,
+Month = >} Sales)
+
+
+MTD (Month-To-Date) Sales:
+Sum({$<MonthID = {$(=Max(MonthID))},
+Year = ,
+Quarter = ,
+Month = >} Sales)
+
+Previous Month Sales:
+Sum({$<MonthID = {$(=Max(MonthID) – 1)},
+Year = ,
+Quarter = ,
+Month = >} Sales)
+
+Previous Quarter Sales:
+Sum({$<QuarterID = {$(=Max(QuarterID) – 1)},
+Year = ,
+Quarter = ,
+Month = >} Sales)
+
+
+Sales for the same Month but Previous Year:
+Sum({$<MonthID = {$(=Max(MonthID) – 12)},
+Year = ,
+Quarter = ,
+Month = >} Sales)
+
+
+Sales for same Quarter of the Previous Year:
+Sum({$<QuarterID = {$(=Max(QuarterID) – 4)},
+Year = ,
+Quarter = ,
+Month = >} Sales)
+
+
+YTD Sales for Previous Year
+Sum({$<MonthID = {“<=$(=Max(MonthID) – 12)”},
+Year = {$(=Max(Year) – 1)},
+Quarter = ,
+Month = >} Sales)
+
+
+Sales for Rolling 12 Months:
+Sum({$<MonthID = {“>=$(=Max(MonthID) – 11)<=$(=Max(MonthID))”},
+Year = ,
+Quarter = ,
+Month = >} Sales)
+
